@@ -1,5 +1,7 @@
 # agent.py
 
+import os 
+import streamlit as st
 from dotenv import load_dotenv
 from langchain.agents import create_agent
 
@@ -8,6 +10,14 @@ from web_search_tool import web_search
 from retriever_tool import pdf_retriever
 
 load_dotenv()
+
+def get_api_key(key_name):
+    try:
+        return st.secrets[key_name]
+    except Exception:
+        return os.environ.get(key_name)
+
+os.environ["GOOGLE_API_KEY"] = get_api_key("GOOGLE_API_KEY")
 
 # Step 1: put all three tools in one list — the agent picks from these
 tools = [pdf_retriever, calculator, web_search]

@@ -1,10 +1,21 @@
 # retriever_tool.py
 
-from dotenv import load_dotenv          # ADD THIS
+import os
+import streamlit as st
+from dotenv import load_dotenv
 load_dotenv()
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_core.tools import tool
+
+def get_api_key(key_name):
+    try:
+        return st.secrets[key_name]
+    except Exception:
+        return os.environ.get(key_name)
+
+# make sure GOOGLE_API_KEY is available in the environment either way
+os.environ["GOOGLE_API_KEY"] = get_api_key("GOOGLE_API_KEY")
 
 # Step 1: set up the embeddings (same as in rag_query.py)
 embeddings = GoogleGenerativeAIEmbeddings(

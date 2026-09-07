@@ -1,14 +1,18 @@
-# web_search_tool.py
+import os
+import streamlit as st
+from dotenv import load_dotenv
+from tavily import TavilyClient
+from langchain_core.tools import tool
 
-import os                                  # lets us read values from the .env file
-from dotenv import load_dotenv             # loads .env into the environment
-from tavily import TavilyClient            # Tavily's official Python client
-from langchain_core.tools import tool      # turns our function into an agent tool
+load_dotenv()
 
-load_dotenv()   # this reads your .env file and makes TAVILY_API_KEY available
+def get_api_key(key_name):
+    try:
+        return st.secrets[key_name]
+    except Exception:
+        return os.environ.get(key_name)
 
-# Step 1: create a Tavily client using your API key
-tavily_client = TavilyClient(api_key=os.environ["TAVILY_API_KEY"])
+tavily_client = TavilyClient(api_key=get_api_key("TAVILY_API_KEY"))
 
 
 # Step 2: this is the actual tool our AI agent will call
